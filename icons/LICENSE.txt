@@ -1,0 +1,5 @@
+Chrometric uses some application icons from the Pictoico iconset (e.g. screenshot.png, open.png) 
+by Luka Pensa http://pictoico.com
+
+The Pictoico visual initiative is available under Creative Commons Attribution-Noncommercial 3.0 
+Unported license http://creativecommons.org/licenses/by-nc/3.0/
