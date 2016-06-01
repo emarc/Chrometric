@@ -1,0 +1,23 @@
+{
+  "name": "chrometric",
+  "version": "1.0.0",
+  "description": "Colorblindness simulator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://emarc@github.com/emarc/Chrometric.git"
+  },
+  "keywords": [
+    "colorblind",
+    "simulator"
+  ],
+  "author": "Marc Englund",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/emarc/Chrometric/issues"
+  },
+  "homepage": "https://github.com/emarc/Chrometric#readme"
+}

@@ -1,6 +1,6 @@
 Chrometric http://enably.com/chrometric
 
-Copyright Marc Englund 2010
+Copyright Marc Englund 2016
 
 Released under the GNU General Public License (see LICENSE-GPL.txt)
 
@@ -13,8 +13,4 @@ For details, see
 http://colorlab.wickline.org/colorblind/colorlab/docs/legal.html
 
 ===
-
-Chrometric is made with Aptana, using the GWT and Adobe AIR plugins.
-You should be able to import this project and start coding, if your
-Aptana (or Eclipse) has those plugins installed. 
-(Should. I have not actually verified with a fresh checkout yet.)
+Chrometric is built on Electron, Polymer and Vaadin Elements.
