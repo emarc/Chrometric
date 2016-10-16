@@ -8,25 +8,24 @@
   <meta name="theme-color" content="#fff">
 
   <script>
-    // setup Polymer options
     window.Polymer = {lazyRegister: true, dom: 'shadow'};
   </script>
 
-  <link rel="import" href="../bower_components/polymer/polymer.html">
+  <link rel="import" href="bower_components/polymer/polymer.html">
 
-  <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-  <link rel="import" href="/bower_components/paper-header-panel/paper-header-panel.html">
-  <link rel="import" href="/bower_components/paper-toolbar/paper-toolbar.html">
-  <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
-  <link rel="import" href="/bower_components/paper-menu/paper-menu.html">
-  <link rel="import" href="/bower_components/paper-menu-button/paper-menu-button.html">
-  <link rel="import" href="/bower_components/paper-item/paper-item.html">
+  <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="bower_components/paper-header-panel/paper-header-panel.html">
+  <link rel="import" href="bower_components/paper-toolbar/paper-toolbar.html">
+  <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="bower_components/paper-menu/paper-menu.html">
+  <link rel="import" href="bower_components/paper-menu-button/paper-menu-button.html">
+  <link rel="import" href="bower_components/paper-item/paper-item.html">
 
 
-  <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+  <link rel="import" href="bower_components/iron-selector/iron-selector.html">
 
-  <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
-  <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+  <link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout.html">
+  <link rel="import" href="bower_components/iron-icons/iron-icons.html">
 
   <link rel="import" href="bower_components/vaadin-combo-box/vaadin-combo-box.html">
 
@@ -39,12 +38,47 @@
       color: #fff;
       background-color: #ccc;
     }
+
+   html, body {
+            height: 100%;
+            margin: 0;
+        }
     
     vaadin-combo-box {
       width: 100%;
       color: #fff;
       margin-top: -1em;
     }
+
+    h1.mode {
+      font-family: 'Roboto', 'Noto', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      font-size: 36px;
+      font-weight: 100;
+      line-height: 24px;
+      text-transform: uppercase;
+      padding: 8px;
+
+      margin:0 !important;
+    }
+    paper-icon-button {
+      margin:0 !important;
+    }
+
+    div.floated-label-placeholder {
+      display: none;
+    }
+
+        #filter {
+         display:none;   
+        }
+
+        .Protanopia {
+             -webkit-filter: url(#Protanopia);
+        }
+        .Tritanopia {
+             -webkit-filter: url(#Tritanopia);
+        }
   </style>
   <style is="custom-style">
     :root {
@@ -61,36 +95,95 @@
       display: block;
     }
     
-    paper-menu-button {
-      margin: auto;
-    }
   </style>
 
 </head>
 
 <body class="fullbleed vertical layout">
-  <!-- paper-header-panel must have an explicit height -->
   <paper-header-panel class="flex">
-    <paper-toolbar>
-      <paper-icon-button icon="arrow-back"></paper-icon-button>
-      <paper-icon-button icon="arrow-forward"></paper-icon-button>
+    <paper-toolbar class="medium-tall">
 
-      <vaadin-combo-box no-label-float=true class="flex" noLabelFloat class="url" items='["https://vaadin.com", "http://enably.com"]'>
-      </vaadin-combo-box>
-
-      <paper-icon-button icon="star-border"></paper-icon-button>
-      <paper-icon-button icon="archive"></paper-icon-button>
-      <paper-menu-button horizontal-align="right">
-        <paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
-        <paper-menu class="dropdown-content">
+      <!-- TOP -->
+     <paper-menu-button>
+        <paper-icon-button icon="visibility" class="dropdown-trigger"></paper-icon-button>
+        <paper-menu id="mode" class="dropdown-content">
+          <paper-item>Normal</paper-item>
           <paper-item>Protanopia</paper-item>
           <paper-item>Tritanopia</paper-item>
           <paper-item>Deuteranomaly</paper-item>
         </paper-menu>
       </paper-menu-button>
+
+      <h1 id="title" class="mode title">Normal</h1>
+
+     <paper-icon-button icon="archive"></paper-icon-button>
+
+     <!-- MIDDLE -->
+      <paper-icon-button class="middle" icon="arrow-back"></paper-icon-button>
+
+      <paper-icon-button class="middle" icon="arrow-forward"></paper-icon-button>
+
+      <vaadin-combo-box id="url" class="flex middle" allow-custom-value no-label-float=true noLabelFloat class="url" items='["https://vaadin.com", "http://enably.com"]'>
+      </vaadin-combo-box>
+
+      <paper-icon-button class="middle" icon="star-border"></paper-icon-button>
+     
     </paper-toolbar>
-    <div>Content</div>
+
+   <webview id="webview" src="https://www.github.com/" style="width:100%; height:100%"></webview>
+
+
   </paper-header-panel>
+
+  <script>
+    var webview = document.getElementById("webview");
+    var url = document.getElementById("url");
+    var title = document.getElementById("title");
+    var mode = document.getElementById("mode");
+
+    function apply(id) {
+        // var webview = document.getElementById("webview")
+        webview.className = id;
+    } 
+
+    url.addEventListener('value-changed', function(event) {
+      // validate url
+      var newUrl = event.detail.value;
+      var items = url.items;
+
+      if (items.indexOf(newUrl)<0) {
+        items.push(newUrl);
+      }
+      
+      webview.src = newUrl;
+    });
+
+    
+    mode.addEventListener('iron-select', function(event) {
+      var m = mode.selectedItem.innerText;
+      title.innerHTML = m;
+      webview.className = m;
+    });
+
+
+  </script>
+
+      <svg id="filter">
+        <filter id="Protanopia">
+            <feColorMatrix 
+                in="SourceGraphic" 
+                type="matrix" 
+                values="-0.5 0 1.8 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0">
+            </feColorMatrix>
+        </filter>
+        <filter id="Tritanopia">
+            <feColorMatrix 
+                in="SourceGraphic" 
+                type="matrix" 
+                values="1.6 0 1.8 0 0 0 1 0 0 0 0 0 -0.5 0 0 0 0 0 1 0">
+            </feColorMatrix>
+        </filter>
+    </svg>
 </body>
 
 </html>
