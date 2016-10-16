@@ -30,77 +30,59 @@
   <link rel="import" href="bower_components/vaadin-combo-box/vaadin-combo-box.html">
 
   <style>
-    body {
-      margin: 0;
-      font-family: 'Roboto', 'Noto', sans-serif;
-      line-height: 1.5;
-      min-height: 100vh;
-      color: #fff;
-      background-color: #ccc;
-    }
 
-   html, body {
-            height: 100%;
-            margin: 0;
-        }
+    html, body {
+      font-family: 'Roboto', 'Noto', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      height: 100%;
+      margin: 0;
+    }
     
     vaadin-combo-box {
       width: 100%;
-      color: #fff;
-      margin-top: -1em;
+      xcolor: #fff;
+      xmargin-top: -1em;
     }
 
     h1.mode {
-      font-family: 'Roboto', 'Noto', sans-serif;
-      -webkit-font-smoothing: antialiased;
       font-size: 36px;
       font-weight: 100;
       line-height: 24px;
       text-transform: uppercase;
       padding: 8px;
-
-      margin:0 !important;
-    }
-    paper-icon-button {
       margin:0 !important;
     }
 
-    div.floated-label-placeholder {
-      display: none;
+    paper-menu-button {
+      padding: 0;
     }
 
-        #filter {
-         display:none;   
-        }
+    #filter {
+      display:none;   
+    }
 
-        .Protanopia {
-             -webkit-filter: url(#Protanopia);
-        }
-        .Tritanopia {
-             -webkit-filter: url(#Tritanopia);
-        }
+    .Protanopia {
+          -webkit-filter: url(#Protanopia);
+    }
+    .Tritanopia {
+          -webkit-filter: url(#Tritanopia);
+    }
   </style>
+
   <style is="custom-style">
     :root {
-      --paper-input-container-color: rgba(0, 0, 0, 0.1);
+      --paper-input-container-color: rgba(255, 255, 255, 0.1);
       --paper-input-container-input-color: #fff;
-    }
-    
-    .flex {
-      /* tutorial did not mention this */
-      @apply(--layout-vertical);
-    }
-    
-    paper-menu {
-      display: block;
+      --paper-toolbar-height: 48px;
+      --paper-toolbar-background: #303030;
     }
     
   </style>
 
 </head>
 
-<body class="fullbleed vertical layout">
-  <paper-header-panel class="flex">
+<body>
+  <paper-header-panel>
     <paper-toolbar class="medium-tall">
 
       <!-- TOP -->
@@ -123,7 +105,7 @@
 
       <paper-icon-button class="middle" icon="arrow-forward"></paper-icon-button>
 
-      <vaadin-combo-box id="url" class="flex middle" allow-custom-value no-label-float=true noLabelFloat class="url" items='["https://vaadin.com", "http://enably.com"]'>
+      <vaadin-combo-box id="url" class="middle" allow-custom-value no-label-float="true" class="url" items='["https://vaadin.com", "http://enably.com"]'>
       </vaadin-combo-box>
 
       <paper-icon-button class="middle" icon="star-border"></paper-icon-button>
@@ -131,7 +113,6 @@
     </paper-toolbar>
 
    <webview id="webview" src="https://www.github.com/" style="width:100%; height:100%"></webview>
-
 
   </paper-header-panel>
 
@@ -142,12 +123,11 @@
     var mode = document.getElementById("mode");
 
     function apply(id) {
-        // var webview = document.getElementById("webview")
         webview.className = id;
     } 
 
     url.addEventListener('value-changed', function(event) {
-      // validate url
+      // TODO validate url
       var newUrl = event.detail.value;
       var items = url.items;
 
@@ -164,7 +144,6 @@
       title.innerHTML = m;
       webview.className = m;
     });
-
 
   </script>
 
