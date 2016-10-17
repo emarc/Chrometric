@@ -40,21 +40,25 @@
     
     vaadin-combo-box {
       width: 100%;
-      xcolor: #fff;
-      xmargin-top: -1em;
     }
 
-    h1.mode {
-      font-size: 36px;
+    .mode {
+      font-size: 24px;
       font-weight: 100;
       line-height: 24px;
       text-transform: uppercase;
       padding: 8px;
       margin:0 !important;
+      vertical-align: middle;
     }
 
     paper-menu-button {
       padding: 0;
+      white-space: nowrap;
+    }
+    paper-menu-button:hover {
+      border-bottom: 1px solid #404040;
+
     }
 
     #filter {
@@ -64,9 +68,29 @@
     .Protanopia {
           -webkit-filter: url(#Protanopia);
     }
+    .Protanomaly {
+          -webkit-filter: url(#Protanomaly);
+    }
+    .Deuteranopia {
+          -webkit-filter: url(#Deuteranopia);
+    }
+    .Deuteranomaly {
+          -webkit-filter: url(#Deuteranomaly);
+    }
     .Tritanopia {
           -webkit-filter: url(#Tritanopia);
     }
+    .Tritanomaly {
+          -webkit-filter: url(#Tritanomaly);
+    }
+    .Achromatopsia {
+          -webkit-filter: url(#Achromatopsia);
+    }
+    .Achromatomaly {
+          -webkit-filter: url(#Achromatomaly);
+    }
+          
+
   </style>
 
   <style is="custom-style">
@@ -83,36 +107,47 @@
 
 <body>
   <paper-header-panel>
-    <paper-toolbar class="medium-tall">
+    <paper-toolbar>
 
       <!-- TOP -->
-     <paper-menu-button>
-        <paper-icon-button icon="visibility" class="dropdown-trigger"></paper-icon-button>
+     <paper-menu-button title="Change simulation mode">
+        <paper-button class="dropdown-trigger" >
+              <iron-icon icon="visibility"></iron-icon>
+              <span id="title" class="mode">Normal</span>
+        </paper-button>
         <paper-menu id="mode" class="dropdown-content">
           <paper-item>Normal</paper-item>
           <paper-item>Protanopia</paper-item>
-          <paper-item>Tritanopia</paper-item>
+          <paper-item>Protanomaly</paper-item>
+          <paper-item>Deuteranopia</paper-item>
           <paper-item>Deuteranomaly</paper-item>
+          <paper-item>Tritanopia</paper-item>
+          <paper-item>Tritanomaly</paper-item>
+          <paper-item>Achromatopsia</paper-item>
+          <paper-item>Achromatomaly</paper-item>
         </paper-menu>
+       
       </paper-menu-button>
 
-      <h1 id="title" class="mode title">Normal</h1>
-
-     <paper-icon-button icon="archive"></paper-icon-button>
+      <!-- Save screenshot
+      <paper-icon-button icon="archive"></paper-icon-button>
+      -->
 
      <!-- MIDDLE -->
-      <paper-icon-button class="middle" icon="arrow-back"></paper-icon-button>
+      <paper-icon-button title="Navigate back" id="back" icon="arrow-back"></paper-icon-button>
 
-      <paper-icon-button class="middle" icon="arrow-forward"></paper-icon-button>
+      <paper-icon-button title="Navigate forward" id="forward" icon="arrow-forward"></paper-icon-button>
 
-      <vaadin-combo-box id="url" class="middle" allow-custom-value no-label-float="true" class="url" items='["https://vaadin.com", "http://enably.com"]'>
+      <vaadin-combo-box id="url" placeholder="Enter URL here and choose simulation to the left" allow-custom-value no-label-float="true" class="url" items="[]">
       </vaadin-combo-box>
 
-      <paper-icon-button class="middle" icon="star-border"></paper-icon-button>
+      <!-- Bookmark
+      <paper-icon-button icon="star-border"></paper-icon-button>
+      -->
      
     </paper-toolbar>
 
-   <webview id="webview" src="https://www.github.com/" style="width:100%; height:100%"></webview>
+   <webview id="webview" src="http://enably.com/chrometric" style="width:100%; height:100%"></webview>
 
   </paper-header-panel>
 
@@ -122,27 +157,51 @@
     var title = document.getElementById("title");
     var mode = document.getElementById("mode");
 
-    function apply(id) {
-        webview.className = id;
-    } 
+    var back = document.getElementById("back");
+    var forward = document.getElementById("forward");
+
 
     url.addEventListener('value-changed', function(event) {
-      // TODO validate url
       var newUrl = event.detail.value;
-      var items = url.items;
-
-      if (items.indexOf(newUrl)<0) {
-        items.push(newUrl);
+      if (!isUrl(newUrl)) {
+        newUrl = "http://"+newUrl;
       }
-      
-      webview.src = newUrl;
+      if (isUrl(newUrl)) {
+        add(newUrl);
+        webview.src = newUrl;
+      } 
+      // TODO animate error
     });
 
+    function add(newUrl) {
+      var items = url.items;
+      if (items.indexOf(newUrl)<0) {  
+        url.push('items', newUrl);
+      }
+    }
+
+    function isUrl(url) {
+      return /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/.test(url);
+    }
     
     mode.addEventListener('iron-select', function(event) {
       var m = mode.selectedItem.innerText;
       title.innerHTML = m;
       webview.className = m;
+    });
+
+    webview.addEventListener('did-navigate', function(event) {
+      var newUrl = webview.getURL();
+      add(newUrl);
+      url.value = newUrl;
+    });
+
+    back.addEventListener('click', function(event) {
+      webview.goBack();
+    });
+
+    forward.addEventListener('click', function(event) {
+      webview.goForward();
     });
 
   </script>
@@ -152,17 +211,61 @@
             <feColorMatrix 
                 in="SourceGraphic" 
                 type="matrix" 
-                values="-0.5 0 1.8 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0">
+                values="0.567,0.433,0,0,0, 0.558,0.442,0,0,0, 0,0.242,0.758,0,0, 0,0,0,1,0">
+            </feColorMatrix>
+        </filter>
+        <filter id="Protanomaly">
+            <feColorMatrix 
+                in="SourceGraphic" 
+                type="matrix" 
+                values="0.817,0.183,0,0,0, 0.333,0.667,0,0,0, 0,0.125,0.875,0,0, 0,0,0,1,0">
+            </feColorMatrix>
+        </filter>
+        <filter id="Deuteranopia">
+            <feColorMatrix 
+                in="SourceGraphic" 
+                type="matrix" 
+                values="0.625,0.375,0,0,0, 0.7,0.3,0,0,0, 0,0.3,0.7,0,0, 0,0,0,1,0">
+            </feColorMatrix>
+        </filter>
+        <filter id="Deuteranomaly">
+            <feColorMatrix 
+                in="SourceGraphic" 
+                type="matrix" 
+                values="0.8,0.2,0,0,0, 0.258,0.742,0,0,0, 0,0.142,0.858,0,0, 0,0,0,1,0">
             </feColorMatrix>
         </filter>
         <filter id="Tritanopia">
             <feColorMatrix 
                 in="SourceGraphic" 
                 type="matrix" 
-                values="1.6 0 1.8 0 0 0 1 0 0 0 0 0 -0.5 0 0 0 0 0 1 0">
+                values="0.95,0.05,0,0,0, 0,0.433,0.567,0,0, 0,0.475,0.525,0,0, 0,0,0,1,0">
+            </feColorMatrix>
+        </filter>
+        <filter id="Tritanomaly">
+            <feColorMatrix 
+                in="SourceGraphic" 
+                type="matrix" 
+                values="0.967,0.033,0,0,0, 0,0.733,0.267,0,0, 0,0.183,0.817,0,0, 0,0,0,1,0">
+            </feColorMatrix>
+        </filter>
+        <filter id="Achromatopsia">
+            <feColorMatrix 
+                in="SourceGraphic" 
+                type="matrix" 
+                values="0.299,0.587,0.114,0,0, 0.299,0.587,0.114,0,0, 0.299,0.587,0.114,0,0, 0,0,0,1,0">
+            </feColorMatrix>
+        </filter>
+        <filter id="Achromatomaly">
+            <feColorMatrix 
+                in="SourceGraphic" 
+                type="matrix" 
+                values="0.618,0.320,0.062,0,0, 0.163,0.775,0.062,0,0, 0.163,0.320,0.516,0,0 ,0,0,0,1,0">
             </feColorMatrix>
         </filter>
     </svg>
+
+    
 </body>
 
 </html>
