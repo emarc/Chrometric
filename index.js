@@ -14,13 +14,12 @@ let win;
 
 function start() {
 
-    win = new BrowserWindow({ width: 800, height: 600 });
+    win = new BrowserWindow({ width: 960, height: 640 });
 
-    // win.loadURL(`file://${__dirname}/browser.html`);
-win.loadURL(`file://${__dirname}/ui/index.html`);
+    win.loadURL(`file://${__dirname}/ui/index.html`);
 
     // Open the DevTools.
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
 
     // Closing window
     win.on('closed', () => {
